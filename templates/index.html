@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* Body Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #e0f7fa, #80deea, #4dd0e1);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        /* Container Styling */
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            padding: 40px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        /* Heading Styling */
+        h1 {
+            text-align: center;
+            font-size: 2.8em;
+            color: #00796b;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        /* Form Styling */
+        form {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 10px;
+        }
+
+        input[type="text"] {
+            flex-grow: 1;
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid #b2dfdb;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #00796b;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            padding: 12px 18px;
+            font-size: 1.1em;
+            font-weight: bold;
+            background-color: #00796b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #004d40;
+            transform: scale(1.05);
+        }
+        
+        /* Task List Styling */
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #e0f2f1;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 1.1em;
+            color: #004d40;
+            transition: background-color 0.3s;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .task.completed span {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        .task:hover {
+            background-color: #b2dfdb;
+        }
+
+        .task span {
+            flex-grow: 1;
+            padding-right: 20px;
+            transition: color 0.3s;
+        }
+
+        /* Button Styles Inside Each Task */
+        .remove, .complete {
+            font-size: 0.9em;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .remove {
+            color: #d32f2f;
+            background-color: #ffebee;
+        }
+
+        .complete {
+            color: #00796b;
+            background-color: #e0f7fa;
+        }
+
+        .remove:hover {
+            background-color: #ffbaba;
+        }
+
+        .complete:hover {
+            background-color: #b2ebf2;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+
+            input[type="text"] {
+                width: 65%;
+            }
+
+            button {
+                width: 30%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My To-Do List</h1>
+        <form action="/add" method="POST">
+            <input type="text" name="task" placeholder="Enter a new task" required>
+            <button type="submit">Add Task</button>
+        </form>
+
+        <ul>
+            {% for task in tasks %}
+            <li class="task {% if task.completed %}completed{% endif %}">
+                <span>{{ task.content }}</span>
+                <a href="{{ url_for('toggle_complete', task_index=loop.index0) }}" class="complete">
+                    {% if task.completed %}Undo{% else %}Complete{% endif %}
+                </a>
+                <a href="{{ url_for('remove_task', task_index=loop.index0) }}" class="remove">Remove</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
